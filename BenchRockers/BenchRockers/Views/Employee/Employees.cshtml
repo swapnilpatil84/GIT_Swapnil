@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "Employees";
+}
+
+<div id="EmployeeTableContainer">
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#EmployeeTableContainer').jtable({
+            title: 'Employee List',
+            paging: true,
+            pageSize: 10,
+            sorting: true,
+            defaultSorting: 'Name ASC',
+            actions: {
+                listAction: '@Url.Action("EmployeeList")',
+                deleteAction: '@Url.Action("DeleteEmployee")',
+                updateAction: '@Url.Action("UpdateEmployee")',
+                createAction: '@Url.Action("CreateEmployee")'
+            },
+            fields: {
+                EmployeeId: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                Name: {
+                    title: 'Name',
+                    width: '23%'
+                },
+                //EmailAddress: {
+                //    title: 'Email address',
+                //    list: false
+                //},
+                RoleId: {
+                    title: 'Roles',
+                    width: '12%',
+                    options: '@Url.Action("GetRoles")'
+                },
+                Account: {
+                    title: 'Account',
+                    width: '23%'
+                },
+                //Gender: {
+                //    title: 'Gender',
+                //    width: '13%',
+                //    options: { 'M': 'Male', 'F': 'Female' }
+                //},
+                TotalExp: {
+                    title: 'Total Exp.',
+                    width: '12%'
+                },
+                Location: {
+                    title: 'Location',
+                    width: '15%'
+                }
+            },
+            //Initialize validation logic when a form is created
+            formCreated: function (event, data) {
+                data.form.find('input[name="Name"]').addClass('validate[required]');
+                data.form.find('input[name="Account"]').addClass('validate[required');
+                data.form.find('input[name="TotalExp"]').addClass('validate[required]');
+                data.form.find('input[name="Location"]').addClass('validate[required]');
+                //data.form.find('input[name="Education"]').addClass('validate[required]');
+                data.form.validationEngine();
+            },
+            //Validate form when it is being submitted
+            formSubmitting: function (event, data) {
+                return data.form.validationEngine('validate');
+            },
+            //Dispose validation logic when form is closed
+            formClosed: function (event, data) {
+                data.form.validationEngine('hide');
+                data.form.validationEngine('detach');
+            }
+        });
+
+        //Load employee list from server
+        $('#EmployeeTableContainer').jtable('load');
+    });
+
+</script>
